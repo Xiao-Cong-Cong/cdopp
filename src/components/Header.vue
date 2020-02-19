@@ -16,15 +16,15 @@
 				<div class="navbar-right">
 					<form class="navbar-form" v-if="user.login === 0">
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="username" v-model="username">
-							<input type="password" class="form-control" placeholder="password" v-model="password">
+							<input type="text" class="form-control" placeholder="username" v-model="form.username">
+							<input type="password" class="form-control" placeholder="password" v-model="form.password">
 							<button type="button" class="btn btn-success" @click="login">登陆</button>
 							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#register-modal">注册</button>
 						</div>
 					</form>
 					<ul class="nav navbar-nav" v-if="user.login === 1">
 						<li><router-link to="/user">欢迎, {{ user.username }}</router-link></li>    
-						<li><a @click="signout">登出</a></li>
+						<li><a @click="logout">登出</a></li>
 					</ul>
 				</div>
 			</div>
@@ -33,25 +33,42 @@
 </template>
 
 <script>
+	import api from '../axios'
 	export default {
 		name: "Header",
 		data() {
 			return {
 				user: this.$store.state.user,
-				username: '',
-				password: ''
+				form: {
+					username: '',
+					password: ''
+				}
 			}
 		},
 		methods: {
 			login() {
-				this.$store.commit('login', {username: this.username, password: this.password})
-				this.$router.push({path:'/user'})
+				api.userLogin(this.form).then(({data}) => {
+					console.log(data)
+					if(data.success) {
+						this.$store.commit('login', data)
+						this.$router.push({path:'/user'})
+					} else {
+						alert(data.errorMessage)
+					}
+				})
 			},
-			signout() {
-				this.username = ''
-				this.password = ''
-				this.$store.commit('signout')
-				this.$router.push({path:'/'})
+			logout() {
+				api.userLogout().then(({data}) => {
+					console.log(data)
+					if(data.success) {
+						this.form = {
+							username: '',
+							password: ''
+						}
+						this.$store.commit('logout')
+						this.$router.push({path:'/'})
+					}
+				})
 			}
 		}
 	}

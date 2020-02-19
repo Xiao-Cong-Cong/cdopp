@@ -5,9 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		users: [
-			{username: 'admin', password: 'admin', level: 9}
-		],
 		user: {
 			login: 0,
 			level: 0,
@@ -16,22 +13,21 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		register (state, newUser) {
-			state.users = [...state.users, newUser]
-			// console.log(newUser, state.users)
+			state.user.login = 1;
+			state.user.level = 1;
+			state.user.username = newUser.username;
+			// console.log(newUser)
 		},
 		login (state, user) {
 			// console.log(user)
-			for (var u of state.users) {
-				if(u.username === user.username && u.password === user.password) {
-					state.user.login = 1, state.user.level = u.level, state.user.username = u.username
-					break
-				}
-			}
+			state.user.login = 1;
+			state.user.level = user.level;
+			state.user.username = user.username;
 		},
-		signout (state) {
-			state.user.login = 0
-			state.user.level = 0
-			state.user.username = ''
+		logout (state) {
+			state.user.login = 0;
+			state.user.level = 0;
+			state.user.username = '';
 		}
 	}
 })

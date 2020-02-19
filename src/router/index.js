@@ -45,7 +45,7 @@ const routes = [
     meta: {
       requireLevel: 9
     }
-  },
+  }
 ]
 
 const router = new VueRouter({
