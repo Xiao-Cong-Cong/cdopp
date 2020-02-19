@@ -11,38 +11,38 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">用户名</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" maxlength="20" placeholder="User Name" v-model="username">
+                                <input type="text" class="form-control" maxlength="20" placeholder="User Name" v-model="form.username">
                             </div>
                             <div class="col-sm-6">
-                                <!-- <span ng-class="{'form-control-static text-danger glyphicon glyphicon-remove': !isValid_userName(), 'form-control-static text-success glyphicon glyphicon-ok': isValid_userName()}"></span> -->
-                                <!-- <span class="" ng-show="errorMsg.userName !== ''">{{errorMsg.userName}}</span> -->
+                                <span :class="{'form-control-static text-danger glyphicon glyphicon-remove': isValid_username() === 2, 'form-control-static text-success glyphicon glyphicon-ok': isValid_username() === 1}"></span>
+                                <span class="" v-show="errorMsg.username !== ''">{{errorMsg.username}}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">密码</label>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" maxlength="30" placeholder="Password" v-model="password">
+                                <input type="password" class="form-control" maxlength="30" placeholder="Password" v-model="form.password">
                             </div>
                             <div class="col-sm-6">
-                                <!-- <span ng-class="{'form-control-static text-danger glyphicon glyphicon-remove': !isValid_password(), 'form-control-static text-success glyphicon glyphicon-ok': isValid_password()}"></span> -->
-                                <!-- <span class="" ng-show="errorMsg.password !== ''">{{errorMsg.password}}</span> -->
+                                <span :class="{'form-control-static text-danger glyphicon glyphicon-remove': isValid_password() === 2, 'form-control-static text-success glyphicon glyphicon-ok': isValid_password() === 1}"></span>
+                                <span class="" v-show="errorMsg.password !== ''">{{errorMsg.password}}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">确认密码</label>
                             <div class="col-sm-4">
-                                <input type="password" class="form-control" maxlength="30" placeholder="Password" v-model="password2">
+                                <input type="password" class="form-control" maxlength="30" placeholder="Password" v-model="form.password2">
                             </div>
                             <div class="col-sm-6">
-                                <!-- <span ng-class="{'form-control-static text-danger glyphicon glyphicon-remove': !isValid_password2(), 'form-control-static text-success glyphicon glyphicon-ok': isValid_password2()}"></span> -->
-                                <!-- <span class="" ng-show="errorMsg.password !== ''">{{errorMsg.password2}}</span> -->
+                                <span :class="{'form-control-static text-danger glyphicon glyphicon-remove': isValid_password2() === 2, 'form-control-static text-success glyphicon glyphicon-ok': isValid_password2() === 1}"></span>
+                                <span class="" v-show="errorMsg.password2 !== ''">{{errorMsg.password2}}</span>
                             </div>
                         </div>
-                        <!-- <div class="form-group" ng-hide="errorMsg.msg === ''">
+                        <div class="form-group" v-show="errorMsg.msg !== ''">
                             <div class="col-sm-10 col-sm-offset-2">
                                 <p class="text-danger">{{errorMsg.msg}}</p>
                             </div>
-                        </div> -->
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -59,25 +59,96 @@
 </template>
 
 <script>
+    import api from '../axios'
+    import $ from 'jquery'
     export default {
         name: "Register",
         data() {
             return {
-                username: '',
-                password: '',
-                password2: ''
+                form: {
+                    username: '',
+                    password: '',
+                    password2: ''
+                },
+                errorMsg: {
+                    username: '',
+                    password: '',
+                    password2: '',
+                    msg: ''
+                },
+                usernameReg: /^[0-9a-zA-Z]*$/,
+                passwordReg: /^[0-9a-zA-Z!@#()_,.]*$/
             }
+        },
+        computed: {
+            
         },
         methods: {
             register() {
-                if(this.password === this.password2) {
-                    var user = {
-                        username: this.username,
-                        password: this.password,
-                        level: 1
-                    }
-                    this.$store.commit('register', user)
+                if(!this.errorMsg.username && !this.errorMsg.password && !this.errorMsg.password2) {
+                    api.userRegister(this.form).then(({data}) => {
+                        console.log(data);
+                        if(data.success) {
+                            this.$store.commit('register', this.form);
+                            $('#register-modal').modal('hide');
+                            this.$router.push({path:'/user'});
+                        } else {
+                            this.errorMsg.msg = data.errorMessage;
+                        }
+                    })
                 }
+            },
+            isValid_username: function() {
+                if(this.form.username === '') {
+                    this.errorMsg.username = '';
+                    return 0;
+                }
+                if(this.form.username.length < 5 || this.form.username.length > 20) {
+                    this.errorMsg.username = '长度必须在5~20位';
+                    return 2;
+                }
+                if(!this.usernameReg.test(this.form.username)) {
+                    this.errorMsg.username = '只能包含数字和字母';
+                    return 2;
+                }
+                if(this.form.username[0] >= 0 && this.form.username[0] <= 9) {
+                    this.errorMsg.username = '不能以数字开头';
+                    return 2;
+                }
+                this.errorMsg.username = '';
+                return 1;
+            },
+            isValid_password: function() {
+                if(this.form.password === '') {
+                    this.errorMsg.password = '';
+                    return 0;
+                }
+                if(this.form.password.length < 5 || this.form.password.length > 30) {
+                    this.errorMsg.password = '长度必须在5~30位';
+                    return 2;
+                }
+                if(!this.passwordReg.test(this.form.password)) {
+                    this.errorMsg.password = '只能包含数字、字母和!@#()_,.';
+                    return 2;
+                }
+                if(this.form.password[0] >= 0 && this.form.password[0] <= 9) {
+                    this.errorMsg.password = '不能以数字开头';
+                    return 2;
+                }
+                this.errorMsg.password = '';
+                return 1;
+            },
+            isValid_password2: function() {
+                if(this.form.password2 === '') {
+                    this.errorMsg.password2 = '';
+                    return 0;
+                }
+                if(this.form.password !== this.form.password2) {
+                    this.errorMsg.password2 = '两次密码不一样';
+                    return 2;
+                }
+                this.errorMsg.password2 = '';
+                return 1;
             }
         }
     }

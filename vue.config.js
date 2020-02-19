@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 module.exports = {
     lintOnSave: true,
    
@@ -11,5 +13,16 @@ module.exports = {
           }
         }
       }
+    },
+
+    configureWebpack: {    
+      plugins: [      
+        new webpack.ProvidePlugin({        
+          $: 'jquery',        
+          jQuery: 'jquery',        
+          'windows.jQuery': 'jquery',
+          Popper: ['popper.js', 'default']     
+        })    
+      ]  
     }
   }
