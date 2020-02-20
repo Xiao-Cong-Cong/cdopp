@@ -26,7 +26,8 @@ Register = (req, res) => {
         newUser = new User({
             username: username,
             password: password,
-            level: 1
+            level: 1,
+            balance: 0
         });
     
         User.findOne({ username: username }, (err, doc) => {
@@ -85,7 +86,8 @@ Login = (req, res) => {
                 req.session.user = {
                     login: 1,
                     level: doc.level,
-                    username: doc.username
+                    username: doc.username,
+                    balance: doc.balance
                 }
                 res.json({
                     success: true,
@@ -138,12 +140,57 @@ Modify = (req, res) => {
             errorMessage: "please check your old password [0-9a-zA-Z!@#()_,.]."
         })
     } else {
-        User.update({username: username}, {password: password}, function(err, doc) {
+        User.findOne({ username: username, password: password_old }, (err, doc) => {
             if(err) console.log(err);
-            console.log("更新密码成功");
+            if(!doc) {
+                console.log("原始密码错误");
+                res.json({
+                    success: false,
+                    errorMessage: "原始密码错误"
+                })
+            } else {
+                User.update({username: username}, {password: password}, function(err, doc) {
+                    if(err) console.log(err);
+                    console.log("更新密码成功");
+                    res.json({
+                        success: true
+                    })
+                })
+            }
+        })
+    }
+}
+
+Info = (req, res) => {
+    // console.log(req.session);
+    if(req.session.user.level === 9) {
+        User.find((err, users) => {
+            if(err) console.log(err);
+            // console.log(users);
             res.json({
-                success: true
+                success: true,
+                data: users
             })
+        })
+    } else {
+        console.log("没有权限查看");
+        res.json({
+            success: false,
+            errorMessage: "没有权限查看"
+        })
+    }
+}
+
+Data = (req, res) => {
+    console.log(req.session.user);
+    if(req.session.user) {
+        res.json({
+            success: true,
+            data: req.session.user
+        });
+    } else {
+        res.json({
+            success: false
         })
     }
 }
@@ -152,5 +199,7 @@ userRouter.post("/register", Register);
 userRouter.post("/login", Login);
 userRouter.get("/logout", Logout);
 userRouter.post("/modify", Modify);
+userRouter.get("/info", Info);
+userRouter.get("/data", Data);
 
 module.exports = userRouter

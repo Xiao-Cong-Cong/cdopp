@@ -4,7 +4,7 @@ import axios from './axios'
 import store from './store'
 import router from './router'
 import 'bootstrap'
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 Vue.config.productionTip = false
 

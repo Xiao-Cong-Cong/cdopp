@@ -17,5 +17,11 @@ export default {
     },
     userModify(data) {
         return service.post('/user/modify', data)
+    },
+    userInfo() {
+        return service.get('/user/info');
+    },
+    userData() {
+        return service.get('/user/data');
     }
 }

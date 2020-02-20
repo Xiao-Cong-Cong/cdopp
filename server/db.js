@@ -22,6 +22,11 @@ const userSchema = new Schema({
     level: {
         type: Number,
         required: true
+    },
+    balance: {
+        type: Number,
+        required: true,
+        min: 0
     }
 },{
         timestamps: true

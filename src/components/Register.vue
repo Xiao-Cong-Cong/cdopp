@@ -131,10 +131,6 @@
                     this.errorMsg.password = '只能包含数字、字母和!@#()_,.';
                     return 2;
                 }
-                if(this.form.password[0] >= 0 && this.form.password[0] <= 9) {
-                    this.errorMsg.password = '不能以数字开头';
-                    return 2;
-                }
                 this.errorMsg.password = '';
                 return 1;
             },

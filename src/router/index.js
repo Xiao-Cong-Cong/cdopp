@@ -33,7 +33,7 @@ const routes = [
   {
     path: '/user',
     name: 'User',
-    component: () => import('@/views/User.vue'),
+    component: () => import('@/views/user/index.vue'),
     meta: {
       requireLevel: 1
     }
@@ -41,7 +41,7 @@ const routes = [
   {
     path: '/system',
     name: 'System',
-    component: () => import('@/views/System.vue'),
+    component: () => import('@/views/system/index.vue'),
     meta: {
       requireLevel: 9
     }

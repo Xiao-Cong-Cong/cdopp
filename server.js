@@ -8,8 +8,8 @@ const app = express();
 app.use(logger('dev'));
 app.use(session({
     secret: 'sessiontest',
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
         maxAge: 30 * 60 * 1000
     }

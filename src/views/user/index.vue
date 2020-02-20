@@ -32,58 +32,7 @@
 				</ul> -->
 			</div>
 			<div class="col-sm-10">
-				<div v-show="tab==='user.basic'">
-					<h3>个人信息</h3>
-					<hr>
-					<form class="form-horizontal" onsubmit="return false;">
-						<div class="form-group">
-							<label class="col-sm-2 control-label">用户名</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{{user.userName}}</p>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">原始密码</label>
-							<div class="col-sm-10">
-								<input type="password" class="form-control" placeholder="如需任何修改信息，请输入原密码" ng-model="user.password_old">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">新密码</label>
-							<div class="col-sm-10">
-								<div class="input-group">
-									<input type="password" class="form-control" maxlength="30" placeholder="不修改则留空" ng-model="user.password">
-									<!-- <div class="input-group-addon" @click = "password_show=!password_show">
-										<span :class="{'glyphicon glyphicon-eye-open': password_show, 'glyphicon glyphicon-eye-close': !password_show}"></span>
-									</div> -->
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">确认密码</label>
-							<div class="col-sm-10">
-								<input type="password" class="form-control" maxlength="30" placeholder="不修改则留空" ng-model="user.password2">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-10 col-sm-offset-2">
-								<button type="submit" class="btn btn-primary" @click="changeBasicInfo()" ng-disabled="progress">保存修改</button>
-								<!-- <alert ng-hide="errorMsg===''" type="{{errorMsg_type}}">{{errorMsg}}</alert> -->
-							</div>
-						</div>
-					</form>
-					<h3>账户余额</h3>
-					<hr>
-					<form class="form-horizontal" onsubmit="return false;">
-						<div class="form-group">
-							<label class="col-sm-2 control-label">&yen; {{user.balance}}</label>
-							<div class="col-sm-10">
-								<button type="button" class="btn btn-danger" @click="recharge()">申请充值</button>
-								<span class="text-primary">&nbsp;&nbsp;<strong>{{rechargeError}}</strong></span>
-							</div>
-						</div>
-					</form>
-				</div>
+				<Person v-show="tab==='user.basic'"></Person>
 				<div v-show="tab==='user.rechargeLog'">
 					<h3>充值记录</h3>
 					<!-- <pagination boundary-links="true" total-items="rechargeLogs.total_items" items-per-page="10" max-size="10" ng-model="rechargeLogs_currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
@@ -156,8 +105,12 @@
 </template>
 
 <script>
+	import Person from './Person'
 	export default {
 		name: 'User',
+		components: {
+			Person
+		},
 		data() {
 			return {
 				tab: 'user.printLog',

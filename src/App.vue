@@ -15,14 +15,6 @@
         components: {
             Header,
             Register
-        },
-        data() {
-            return {
-                
-            }
-        },
-        methods: {
-            
         }
     }
 </script>

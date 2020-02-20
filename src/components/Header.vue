@@ -70,6 +70,13 @@
 					}
 				})
 			}
+		},
+		beforeCreate() {
+			api.userData().then(({data}) => {
+				console.log(data);
+				if(data.success)
+					this.$store.commit('login', data.data);
+			})
 		}
 	}
 </script>
