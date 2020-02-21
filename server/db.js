@@ -29,12 +29,58 @@ const userSchema = new Schema({
         min: 0
     }
 },{
-        timestamps: true
+    timestamps: true
 });
 
-var User = mongoose.model('User', userSchema);
+let fileID = 1;
 
-module.exports = User
+const fileSchema = new Schema({
+    fid: {
+        type: Number,
+        required: true,
+        unique: true,
+        default: () => fileID++
+    },
+    filename: {
+        type: String,
+        required: true
+    },
+    pages: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    copies: {
+        type: Number,
+        required: true,
+        default: 1
+    },
+    price: {
+        type: Number,
+        required: true,
+        default: 0.00
+    },
+    status: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    username: {
+        type: String,
+        required: true,
+        default: 'anonymous'
+    },
+    submit_time: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
+})
 
+var db = {
+    User: mongoose.model('User', userSchema),
+    File: mongoose.model('File', fileSchema)
+}
 
+module.exports = db
 

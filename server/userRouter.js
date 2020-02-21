@@ -1,7 +1,8 @@
 const express = require('express');
-const User = require('./db');
+const db = require('./db');
 
 const userRouter = express.Router();
+const User = db.User;
 
 const usernameReg = /^[a-zA-Z]\w{4,19}$/;
 const passwordReg = /^[0-9a-zA-Z!@#()_,.]{5,30}$/;

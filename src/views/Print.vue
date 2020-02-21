@@ -16,11 +16,12 @@
 				<hr>
 				<h4><small><strong>操作</strong></small></h4>
 				<ul class="nav nav-pills nav-stacked">
-					<li>
-						<a href="javascript:" type="file" multiple accept="application/pdf" ngf-max-size="10MB"><span class="glyphicon glyphicon-open-file"></span> 选择文件</a>
+					<li v-if="this.$route.name === 'Print'">
+						<input multiple type="file" ref="files" id="file-input" @change="selectFiles"/>
+						<a @click="chooseFile"><span class="glyphicon glyphicon-open-file"></span> 选择文件</a>
 					</li>
 					<li v-if="this.$route.name === 'Print'">
-						<a href="javascript:"><span class="glyphicon glyphicon-send"></span> 确认打印</a>
+						<a @click="confirmPDF"><span class="glyphicon glyphicon-send"></span> 确认打印</a>
 					</li>
 					<li v-if="this.$route.name === 'Code'">
 						<a href="javascript:"><span class="glyphicon glyphicon-send"></span> 提交打印</a>
@@ -40,6 +41,26 @@
 							<td>价格</td>
 							<td width="40%">上传进度</td>
 						</tr>
+						<tr v-for="singleFile in allFiles" :key="singleFile.filename">
+							<td>
+								<a class="text-danger" v-show="!singleFile.confirm" ng-click="cancel($index)">
+									<span class="glyphicon glyphicon-remove"></span>
+								</a>
+								<p class="text-success" v-show="singleFile.confirm">
+									<span class="glyphicon glyphicon-ok-circle"></span>
+								</p>
+							</td>
+							<td><span>{{singleFile.filename}}</span></td>
+							<td>{{ singleFile.filesize }} MB</td>
+							<td>page</td>
+							<td><input type="number" min="1" style="width:50px;" v-model="singleFile.copies" ng-disabled="singleFile.msg==='' || singleFile.confirm"></td>
+							<td>price</td>
+							<td>
+								{{ singleFile.progress }}%
+								<!-- <progressbar ng-show="singleFile.msg===''" class="progress-striped active" value="singleFile.progress" type="{{singleFile.progress === 100 ? 'success' : 'primary'}}">{{singleFile.progress}}%</progressbar> -->
+								<!-- <p v-show="singleFile" class="text-{{singleFile.msgType}}">{{singleFile.msg}}</p> -->
+							</td>
+						</tr>
 					</table>
 				</div>
 				<div v-if="this.$route.name === 'Code'">
@@ -57,15 +78,97 @@
 </template>
 
 <script>
+	import axios from 'axios';
+	import $ from 'jquery'
 	export default {
 		name: "Print",
 		data() {
 			return {
-				
+				allFiles: [],
+				choosen: 0,
+				uploading: 0
 			}
-		}
+		},
+		methods: {
+			chooseFile() {
+				$('#file-input').trigger('click');
+			},
+			// // TODO: handle duplicate
+			selectFiles() {
+				// console.log(this.$ref);
+				var files = this.$refs.files.files;
+				if(files) {
+					for(var i = 0; i < files.length; i++) {
+						this.selectFile(files[i]);
+					}
+				}
+			},
+			confirmPDF() {
+
+			},
+			selectFile(file) {
+				if(this.choosen === 0 || this.choosen === 2) {
+					this.allFiles = [];
+					this.choosen = 0;
+				}
+				if(file) {
+					this.choosen = 1;
+					this.uploading += 1;
+					if(file.size > 10 * 1024 * 1024) {
+						alert('提交文件过大');
+						return;
+					}
+					if(file.type !== 'application/pdf' && file.type !== 'application/kswps') {
+						alert('请提交A4纸大小的PDF文件');
+						return;
+					}
+					this.allFiles.push({
+						fid: 0,
+						filename: file.name,
+						size: file.size,
+						filesize: Math.floor(file.size / 1024.0 / 1024.0 * 100) / 100,
+						progress: 0,
+						copies: 1,
+						msg: '',
+						msgType: 'success',
+						confirm: 0
+					});
+					var id = this.allFiles.length - 1;
+					this.sendFile(id, file).then((res) => {
+						this.uploading -= 1;
+						if(res.data.success) {
+							this.allFiles[id].msg = "Successful";
+							this.allFiles[id].msgType = "success";
+							// set fid from server
+						}
+					});
+				}
+			},
+			async sendFile(fileId, file) {
+				const formData = new FormData();
+				formData.append('file', file);
+
+				try {
+					return await axios.post('/api/upload/file', formData, {
+						onUploadProgress: e => this.allFiles[fileId].progress = Math.round(e.loaded * 100 / e.total)
+					});
+				} catch(err) {
+					console.log(err);
+					this.allFiles[fileId].msgType = 'warning';
+					this.allFiles[fileId].msg = err.response.data.error;
+				}
+			}
+		},
+		// filters: {
+		// 	keepTwoDecimalPlaces(value) {
+		// 		return value.toFixed(2);
+		// 	}
+		// }
 	}
 </script>
 
-<style>
+<style scoped>
+	#file-input {
+		display: none;
+	}
 </style>
