@@ -1,9 +1,13 @@
+const fs = require('fs')
+const db = require('./server/db');
 const logger = require('morgan');
 const multer = require('multer');
 const express = require('express');
+const { exec } = require('child_process');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const userRouter = require('./server/userRouter');
+const fileRouter = require('./server/fileRouter');
 
 const app = express();
 app.use(logger('dev'));
@@ -18,6 +22,7 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/user', userRouter);
+app.use('/api/file', fileRouter);
 
 const upload = multer({
     dest: './uploads/',
@@ -33,12 +38,48 @@ const upload = multer({
         callback(null, true);
     },
     limits: {
-        // fileSize: 10 * 1024 * 1024
+        fileSize: 10 * 1024 * 1024
     }
 })
 
-app.post('/api/upload/file', upload.single('file'), (req, res) => {
-    res.json({ success: true });
+app.post('/api/file/upload', upload.single('file'), (req, res) => {
+    // rename the file: date_random_user.pdf
+    var randomID = Math.floor(Math.random() * 90000) + 10000;
+    var username = req.session.user ? req.session.user.username : 'anonymous';
+    var filename = new Date() * 1 + '_' + randomID + '_' + username + '.pdf';
+    fs.rename(req.file.path, req.file.destination +  filename, (err) => {
+        if(err) {
+            res.json({
+                success: false,
+                errorMessage: "重命名错误"
+            })
+        }
+    });
+    // read pages and write newFile in db
+    newFile = new db.File({
+        filename: filename,
+        username: username,
+        originalname: req.file.originalname
+    });
+    exec('python ./server/getPDFPages.py ' + req.file.destination + filename, (err, stdout, stderr) => {
+        if(err) {
+            res.json({
+                success: false,
+                errorMessage: "获取页数错误"
+            })
+        } else {
+            newFile.pages = stdout;
+            newFile.price = newFile.pages * 20 / 100;
+
+            newFile.save(err => {
+                if(err) console.log(err);
+                res.json({
+                    success: true,
+                    file: newFile
+                });
+            })
+        }
+    })
 })
 
 app.use((err, req, res, next) => {

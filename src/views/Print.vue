@@ -52,13 +52,17 @@
 							</td>
 							<td><span>{{singleFile.filename}}</span></td>
 							<td>{{ singleFile.filesize }} MB</td>
-							<td>page</td>
+							<td>{{ singleFile.pages }}</td>
 							<td><input type="number" min="1" style="width:50px;" v-model="singleFile.copies" ng-disabled="singleFile.msg==='' || singleFile.confirm"></td>
-							<td>price</td>
+							<td>{{ singleFile.price }}</td>
 							<td>
-								{{ singleFile.progress }}%
 								<!-- <progressbar ng-show="singleFile.msg===''" class="progress-striped active" value="singleFile.progress" type="{{singleFile.progress === 100 ? 'success' : 'primary'}}">{{singleFile.progress}}%</progressbar> -->
-								<!-- <p v-show="singleFile" class="text-{{singleFile.msgType}}">{{singleFile.msg}}</p> -->
+								<!-- <p v-show="singleFile.msg" class="text-{{singleFile.msgType}}">{{singleFile.msg}}</p> -->
+								<div class="progress" v-show="!singleFile.msg">
+									<div class="progress-bar" role="progressbar" :style="'width: ' + singleFile.progress + '%;'">
+										{{ singleFile.progress }}%
+									</div>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -94,6 +98,7 @@
 				$('#file-input').trigger('click');
 			},
 			// // TODO: handle duplicate
+			// // TODO: 文件名截断
 			selectFiles() {
 				// console.log(this.$ref);
 				var files = this.$refs.files.files;
@@ -129,6 +134,8 @@
 						filesize: Math.floor(file.size / 1024.0 / 1024.0 * 100) / 100,
 						progress: 0,
 						copies: 1,
+						pages: 0,
+						price: 0.00,
 						msg: '',
 						msgType: 'success',
 						confirm: 0
@@ -139,7 +146,9 @@
 						if(res.data.success) {
 							this.allFiles[id].msg = "Successful";
 							this.allFiles[id].msgType = "success";
-							// set fid from server
+							this.allFiles[id].pages = res.data.file.pages;
+							this.allFiles[id].price = res.data.file.price;
+							this.allFiles[id].fid = res.data.file.fid;
 						}
 					});
 				}
@@ -149,7 +158,7 @@
 				formData.append('file', file);
 
 				try {
-					return await axios.post('/api/upload/file', formData, {
+					return await axios.post('/api/file/upload', formData, {
 						onUploadProgress: e => this.allFiles[fileId].progress = Math.round(e.loaded * 100 / e.total)
 					});
 				} catch(err) {
@@ -158,17 +167,21 @@
 					this.allFiles[fileId].msg = err.response.data.error;
 				}
 			}
-		},
-		// filters: {
-		// 	keepTwoDecimalPlaces(value) {
-		// 		return value.toFixed(2);
-		// 	}
-		// }
+		}
 	}
 </script>
 
 <style scoped>
 	#file-input {
 		display: none;
+	}
+
+	tr {
+		border-bottom: 10px solid;
+		border-color: transparent;
+	}
+
+	.progress {
+		margin-bottom: 0;
 	}
 </style>

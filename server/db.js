@@ -45,6 +45,9 @@ const fileSchema = new Schema({
         type: String,
         required: true
     },
+    originalname: {
+        type: String
+    },
     pages: {
         type: Number,
         required: true,
