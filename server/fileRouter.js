@@ -59,8 +59,7 @@ SubmitPDF = (req, res) => {
 getLogsByUser = (req, res) => {
     page = req.query.page ? req.query.page : 1;
     username = req.session.user.username;
-    File.estimatedDocumentCount({ usernae: username }, (err, total) => {
-        console.log('total: ', total);
+    File.countDocuments({ username: username }, (err, total) => {
         if(err) console.log(err);
         File.find({ username: username }).skip(page*10-10).limit(10).exec((err, docs) => {
             if(err) console.log(err);
@@ -74,9 +73,29 @@ getLogsByUser = (req, res) => {
 }
 
 getLogsByAdmin = (req, res) => {
-    page = req.query.page
-    status = req.query.status
-    username = req.query.username
+    page = req.query.page ? req.query.page : 1;
+    status = req.query.status;
+    username = req.query.username;
+    if(req.session.user.level === 9) {
+        File.countDocuments({ status: {$in: status}, username: new RegExp(username, "i") }, (err, total) => {
+            if(err) console.log(err);
+            File.find({ status: {$in: status}, username: new RegExp(username, "i") })
+                .skip(page * 10 - 10).limit(10).exec((err, docs) => {
+                if(err) console.log(err);
+                res.json({
+                    success: true,
+                    total: total,
+                    data: docs
+                })
+            })
+        })
+    } else {
+        console.log("没有权限查看");
+        res.json({
+            success: false,
+            errorMessage: "没有权限查看"
+        })
+    }
 }
 
 fileRouter.post('/submitPDF', SubmitPDF);

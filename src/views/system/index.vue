@@ -107,57 +107,7 @@
 						</tr> -->
 					</table>
 				</div>
-				<div v-show="tab==='print'">
-					<h3>打印控制面板&nbsp;&nbsp;<small>非特殊情况管理员不要在此操作打印</small></h3>
-					<div>
-						<!-- <pagination boundary-links="true" total-items="printLogs.total_items" items-per-page="10" max-size="10" v-model="printLogs_currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
-					</div>
-					<div align="right">
-						<label>User Name
-							<input type="text" v-model="printLogs_userName">
-						</label>
-						<label>Status
-							<div class="btn-group">
-								<!-- <label class="btn btn-primary btn-xs" ng-model="printLogs_statusArray.pending" btn-checkbox>Pending</label>
-								<label class="btn btn-primary btn-xs" ng-model="printLogs_statusArray.submitted" btn-checkbox>Submitted</label>
-								<label class="btn btn-primary btn-xs" ng-model="printLogs_statusArray.printing" btn-checkbox>Printing</label>
-								<label class="btn btn-primary btn-xs" ng-model="printLogs_statusArray.printed" btn-checkbox>Printed</label>
-								<label class="btn btn-primary btn-xs" ng-model="printLogs_statusArray.failed" btn-checkbox>Failed</label> -->
-							</div>
-						</label>
-					</div>
-					<table class="table table-hover table-bordered">
-						<tr>
-							<th>#</th>
-							<th>提交时间</th>
-							<th>用户</th>
-							<th>页数</th>
-							<th>份数</th>
-							<th>价格</th>
-							<th>打印机</th>
-							<th>打印状态</th>
-							<th>操作</th>
-						</tr>
-						<tr ng-repeat="log in printLogs.data">
-							<td>{{log.fid}}</td>
-							<td>{{log.submitTime}}</td>
-							<td>{{log.userName}}</td>
-							<td>{{log.pages}}</td>
-							<td>{{log.copies}}</td>
-							<td>{{log.price}}</td>
-							<td>{{log.printerInfo.location}}</td>
-							<td>
-								<span :class="{'text-muted': log.printStatus==='Pending', 'text-primary': log.printStatus==='Submitted', 'text-info': log.printStatus==='Printing', 'text-success': log.printStatus==='Printed', 'text-danger': log.printStatus==='Failed'}">
-									<span :class="{'glyphicon glyphicon-time': log.printStatus==='Pending', 'glyphicon glyphicon-upload': log.printStatus==='Submitted', 'glyphicon glyphicon-file': log.printStatus==='Printing', 'glyphicon glyphicon-ok': log.printStatus==='Printed', 'glyphicon glyphicon-remove': log.printStatus==='Failed'}"></span>
-									<span>{{log.printStatus}}</span>
-								</span>
-							</td>
-							<td>
-								<a href="javascript:" ng-click="confirmPrintSubmitted($index)"><span class="glyphicon glyphicon-file"></span><span>operation</span></a>
-							</td>
-						</tr>
-					</table>
-				</div>
+				<PrintTask v-show="tab==='print'"></PrintTask>
 				<div v-show="tab==='site'">
 					<div class="pull-right">
 						<!-- <span class="text-{{site.msgType}}" ng-hide="site.msg===''"><strong>** {{site.msg}} ** </strong></span> -->
@@ -195,11 +145,13 @@
 </template>
 
 <script>
-    import UserInfo from './UserInfo'
+	import UserInfo from './UserInfo'
+	import PrintTask from './PrintTask'
 	export default {
         name: 'System',
         components: {
-            UserInfo
+			UserInfo,
+			PrintTask
         },
 		data() {
 			return {

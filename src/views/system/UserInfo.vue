@@ -5,7 +5,7 @@
             <Pagination v-model="page" :total="total"></Pagination>
         </div>
         <div class="col-md-4">
-            <div align="right" class="username-search">
+            <div align="right" class="user-info-search">
                 <label>User Name
                     <input type="text" v-model="username">
                 </label>
@@ -74,7 +74,7 @@
 </script>
 
 <style>
-    .username-search {
+    .user-info-search {
         padding-top: 40px;
     }
 </style>

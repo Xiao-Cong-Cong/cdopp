@@ -32,5 +32,8 @@ export default {
     },
     fileGetLogsByUser(data) {
         return service.get('/file/getLogsByUser', { params: data });
+    },
+    fileGetLogsByAdmin(data) {
+        return service.get('/file/getLogsByAdmin', { params: data });
     }
 }
