@@ -29,5 +29,8 @@ export default {
     },
     fileSubmitPDF(data) {
         return service.post('/file/submitPDF', data);
+    },
+    fileGetLogsByUser(data) {
+        return service.get('/file/getLogsByUser', { params: data });
     }
 }

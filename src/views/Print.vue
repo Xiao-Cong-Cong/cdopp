@@ -34,7 +34,7 @@
 					<table class="table table-hover">
 						<tr>
 							<td>#</td>
-							<td>文件名</td>
+							<td width="30%">文件名</td>
 							<td>文件大小</td>
 							<td>页数</td>
 							<td>打印份数</td>
@@ -230,6 +230,11 @@
 <style scoped>
 	#file-input {
 		display: none;
+	}
+
+	table {
+		word-wrap: break-word;
+		word-break: break-all;
 	}
 
 	tr {

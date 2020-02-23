@@ -32,6 +32,7 @@
 				</ul> -->
 			</div>
 			<div class="col-sm-10">
+				<Printlog v-show="tab==='user.printLog'"></Printlog>
 				<Person v-show="tab==='user.basic'"></Person>
 				<div v-show="tab==='user.rechargeLog'">
 					<h3>充值记录</h3>
@@ -62,37 +63,6 @@
 						</tr>
 					</table>
 				</div>
-				<div v-show="tab==='user.printLog'">
-					<h3>打印记录</h3>
-					<!-- <pagination boundary-links="true" total-items="printLogs.total_items" items-per-page="10" max-size="10" ng-model="printLogs_currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
-					<table class="table table-hover table-bordered">
-						<tr>
-							<th>#</th>
-							<th>提交时间</th>
-							<th>用户</th>
-							<th>页数</th>
-							<th>份数</th>
-							<th>价格</th>
-							<th>打印机</th>
-							<th>打印状态</th>
-						</tr>
-						<tr ng-repeat="log in printLogs.data">
-							<td>{{log.fid}}</td>
-							<td>{{log.submitTime}}</td>
-							<td>{{log.userName}}</td>
-							<td>{{log.pages}}</td>
-							<td>{{log.copies}}</td>
-							<td>{{log.price}}</td>
-							<td>{{log.printerInfo.location}}</td>
-							<td>
-								<span :class="{'text-muted': log.printStatus==='Pending', 'text-primary': log.printStatus==='Submitted', 'text-info': log.printStatus==='Printing', 'text-success': log.printStatus==='Printed', 'text-danger': log.printStatus==='Failed'}">
-									<span :class="{'glyphicon glyphicon-time': log.printStatus==='Pending', 'glyphicon glyphicon-upload': log.printStatus==='Submitted', 'glyphicon glyphicon-file': log.printStatus==='Printing', 'glyphicon glyphicon-ok': log.printStatus==='Printed', 'glyphicon glyphicon-remove': log.printStatus==='Failed'}"></span>
-									<span>{{log.printStatus}}</span>
-								</span>
-							</td>
-						</tr>
-					</table>
-				</div>
 				<!-- <div v-show="tab==='printer.new'">
 					<h3>打印机申请</h3><hr>
 					<p>请先完善个人信息，然后联系管理员进行相关认证</p>
@@ -106,10 +76,12 @@
 
 <script>
 	import Person from './Person'
+	import Printlog from './Printlog'
 	export default {
 		name: 'User',
 		components: {
-			Person
+			Person,
+			Printlog
 		},
 		data() {
 			return {

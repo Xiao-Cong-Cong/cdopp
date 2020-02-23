@@ -42,7 +42,7 @@ SubmitPDF = (req, res) => {
                 errorMessage: "fid not found"
             })
         } else {
-            status = doc.status | 1 << 2;
+            status = 0;
             // console.log(doc.fid, status, doc)
             File.updateOne({ fid: doc.fid }, { status: status }, (err) => {
                 if(err) console.log(err);
@@ -56,7 +56,32 @@ SubmitPDF = (req, res) => {
     })
 }
 
-fileRouter.post('/modifyCopies', ModifyCopies);
+getLogsByUser = (req, res) => {
+    page = req.query.page ? req.query.page : 1;
+    username = req.session.user.username;
+    File.estimatedDocumentCount({ usernae: username }, (err, total) => {
+        console.log('total: ', total);
+        if(err) console.log(err);
+        File.find({ username: username }).skip(page*10-10).limit(10).exec((err, docs) => {
+            if(err) console.log(err);
+            res.json({
+                success: true,
+                total: total,
+                data: docs
+            });
+        })
+    })
+}
+
+getLogsByAdmin = (req, res) => {
+    page = req.query.page
+    status = req.query.status
+    username = req.query.username
+}
+
 fileRouter.post('/submitPDF', SubmitPDF);
+fileRouter.post('/modifyCopies', ModifyCopies);
+fileRouter.get('/getLogsByUser', getLogsByUser);
+fileRouter.get('/getLogsByAdmin', getLogsByAdmin);
 
 module.exports = fileRouter

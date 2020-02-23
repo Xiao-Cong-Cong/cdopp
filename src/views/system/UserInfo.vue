@@ -10,20 +10,24 @@
             </label>
         </div>
         <table class="table table-hover table-bordered">
-            <tr>
-                <th>#</th>
-                <th>用户名</th>
-                <th>余额</th>
-                <th>等级</th>
-                <th>操作</th>
-            </tr>
-            <tr v-for="log in userLogs.data" :key="log.uid">
-                <td>{{log.uid}}</td>
-                <td>{{log.username}}</td>
-                <td>{{log.balance}}</td>
-                <td>{{log.level}}</td>
-                <td>op</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>用户名</th>
+                    <th>余额</th>
+                    <th>等级</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="log in userLogs.data" :key="log.uid">
+                    <td>{{log.uid}}</td>
+                    <td>{{log.username}}</td>
+                    <td>{{log.balance}}</td>
+                    <td>{{log.level}}</td>
+                    <td>op</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </template>

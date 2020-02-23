@@ -70,7 +70,7 @@ app.post('/api/file/upload', upload.single('file'), (req, res) => {
                 originalname: req.file.originalname
             });
             newFile.price = newFile.pages * 20 / 100;
-            newFile.status |= 1 << 1;
+            newFile.status = 4;
 
             newFile.save(err => {
                 if(err) console.log(err);
