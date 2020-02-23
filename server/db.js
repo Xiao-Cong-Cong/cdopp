@@ -63,6 +63,9 @@ const fileSchema = new Schema({
         required: true,
         default: 0.00
     },
+    // 使用二进制表达状态，状态可以叠加
+    // 0-default, 1-uploading, 10-uploaded, 100-submitted, 1000-downloading, 
+    // 10000-downloaded, 100000-permitted, 1000000-printing, 10000000-printed
     status: {
         type: Number,
         required: true,

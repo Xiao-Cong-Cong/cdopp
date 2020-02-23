@@ -17,7 +17,7 @@
 					<form class="navbar-form" v-if="user.login === 0">
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="username" v-model="form.username">
-							<input type="password" class="form-control" placeholder="password" v-model="form.password">
+							<input type="password" class="form-control" placeholder="password" v-model="form.password" @keyup.enter="login">
 							<button type="button" class="btn btn-success" @click="login">登陆</button>
 							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#register-modal">注册</button>
 						</div>

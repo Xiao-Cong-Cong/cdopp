@@ -3,7 +3,7 @@ const db = require('./server/db');
 const logger = require('morgan');
 const multer = require('multer');
 const express = require('express');
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const userRouter = require('./server/userRouter');
@@ -56,11 +56,6 @@ app.post('/api/file/upload', upload.single('file'), (req, res) => {
         }
     });
     // read pages and write newFile in db
-    newFile = new db.File({
-        filename: filename,
-        username: username,
-        originalname: req.file.originalname
-    });
     exec('python ./server/getPDFPages.py ' + req.file.destination + filename, (err, stdout, stderr) => {
         if(err) {
             res.json({
@@ -68,8 +63,14 @@ app.post('/api/file/upload', upload.single('file'), (req, res) => {
                 errorMessage: "获取页数错误"
             })
         } else {
-            newFile.pages = stdout;
+            newFile = new db.File({
+                pages: stdout,
+                filename: filename,
+                username: username,
+                originalname: req.file.originalname
+            });
             newFile.price = newFile.pages * 20 / 100;
+            newFile.status |= 1 << 1;
 
             newFile.save(err => {
                 if(err) console.log(err);

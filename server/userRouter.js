@@ -87,12 +87,13 @@ Login = (req, res) => {
                 req.session.user = {
                     login: 1,
                     level: doc.level,
-                    username: doc.username,
-                    balance: doc.balance
+                    balance: doc.balance,
+                    username: doc.username
                 }
                 res.json({
                     success: true,
                     level: doc.level,
+                    balance: doc.balance,
                     username: doc.username
                 })
             } else {
@@ -150,7 +151,7 @@ Modify = (req, res) => {
                     errorMessage: "原始密码错误"
                 })
             } else {
-                User.update({username: username}, {password: password}, function(err, doc) {
+                User.updateOne({username: username}, {password: password}, (err, doc) => {
                     if(err) console.log(err);
                     console.log("更新密码成功");
                     res.json({
