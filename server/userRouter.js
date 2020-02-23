@@ -165,14 +165,17 @@ Modify = (req, res) => {
 
 // page
 Info = (req, res) => {
-    // console.log(req.session);
+    page = req.query.page ? req.query.page : 1;
+    username = req.query.username;
     if(req.session.user.level === 9) {
-        User.find((err, users) => {
-            if(err) console.log(err);
-            // console.log(users);
-            res.json({
-                success: true,
-                data: users
+        User.countDocuments({username: new RegExp(username, "i")}, (err, total) => {
+            User.find({username: new RegExp(username, "i")}).skip(page*10-10).limit(10).exec((err, users) => {
+                if(err) console.log(err);
+                res.json({
+                    success: true,
+                    total: total,
+                    data: users
+                })
             })
         })
     } else {

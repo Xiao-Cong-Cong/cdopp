@@ -1,7 +1,9 @@
 <template>
     <div class="print-log">
         <h3>打印记录</h3>
-        <Pagination v-model="page" :total="total"></Pagination>
+        <div class="col-md-12">
+            <Pagination v-model="page" :total="total"></Pagination>
+        </div>
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>

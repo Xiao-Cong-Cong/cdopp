@@ -9,7 +9,15 @@ connect.then((db) => {
 
 const Schema = mongoose.Schema;
 
+let userID = 1;
+
 const userSchema = new Schema({
+    uid: {
+        type: Number,
+        required: true,
+        unique: true,
+        default: () => userID++
+    },
     username: {
         type: String,
         required: true,

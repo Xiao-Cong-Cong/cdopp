@@ -90,6 +90,11 @@
                         console.log(data);
                         if(data.success) {
                             this.$store.commit('register', this.form);
+                            this.form = {
+                                username: '',
+                                password: '',
+                                password2: ''
+                            }
                             $('#register-modal').modal('hide');
                             this.$router.push({path:'/user'});
                         } else {
