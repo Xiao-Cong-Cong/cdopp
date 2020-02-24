@@ -107,7 +107,7 @@ GetLogsByAdmin = (req, res) => {
 }
 
 ConfirmPDFById = (req, res) => {
-    if(req.session.user.level === 9) {
+    if(req.session.user && req.session.user.level === 9) {
         var fid = req.query.fid;
         File.update({fid: fid}, {status: 1}, (err, doc) => {
             if(err) console.log(err);

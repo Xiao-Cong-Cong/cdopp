@@ -40,7 +40,8 @@
 
 <script>
     import api from '../../axios';
-    import Pagination from '@/components/Pagination'
+    import { EventBus } from '../../EventBus';
+    import Pagination from '@/components/Pagination';
     export default {
         name: 'Printlog',
         components: {
@@ -67,6 +68,8 @@
                     if(data.success) {
                         this.printLogs = data.data;
                         this.total = Math.ceil(data.total / 10)
+                    } else {
+                        EventBus.$emit('contact-server-failed');
                     }
                 })
             }

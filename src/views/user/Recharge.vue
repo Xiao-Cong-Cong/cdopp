@@ -56,6 +56,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../EventBus'
     import api from '../../axios'
     import $ from 'jquery'
     export default {
@@ -91,6 +92,8 @@
                 if(data.success) {
                     if(data.realname) this.realname = data.realname;
                     if(data.alipayAccount) this.alipayAccount = data.alipayAccount;
+                } else {
+                    EventBus.$emit('contact-server-failed');
                 }
             })
         }

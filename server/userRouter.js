@@ -167,8 +167,9 @@ Modify = (req, res) => {
 Info = (req, res) => {
     page = req.query.page ? req.query.page : 1;
     username = req.query.username;
-    if(req.session.user.level === 9) {
+    if(req.session.user && req.session.user.level === 9) {
         User.countDocuments({username: new RegExp(username, "i")}, (err, total) => {
+            if(err) console.log(err);
             User.find({username: new RegExp(username, "i")}).skip(page*10-10).limit(10).exec((err, users) => {
                 if(err) console.log(err);
                 res.json({

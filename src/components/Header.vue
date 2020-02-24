@@ -24,7 +24,7 @@
 					</form>
 					<ul class="nav navbar-nav" v-if="user.login === 1">
 						<li><router-link to="/user">欢迎, {{ user.username }}</router-link></li>    
-						<li><a @click="logout">登出</a></li>
+						<li><a href="#" @click="logout">登出</a></li>
 					</ul>
 				</div>
 			</div>
@@ -33,7 +33,8 @@
 </template>
 
 <script>
-	import api from '../axios'
+	import api from '../axios';
+	import { EventBus } from '../EventBus'
 	export default {
 		name: "Header",
 		data() {
@@ -59,24 +60,32 @@
 			},
 			logout() {
 				api.userLogout().then(({data}) => {
-					console.log(data)
+					// console.log("login", data)
 					if(data.success) {
 						this.form = {
 							username: '',
 							password: ''
 						}
-						this.$store.commit('logout')
-						this.$router.push({path:'/'})
+						this.$store.commit('logout');
+						this.$router.push({path:'/'}).catch(err => {});
+					}
+				})
+			},
+			updateUserData() {
+				api.userData().then(({data}) => {
+					// console.log("update user data", data);
+					if(data.success)
+						this.$store.commit('login', data.data);
+					else {
+						this.$store.commit('logout');
+						this.$router.push({path:'/'}).catch(err => {});
 					}
 				})
 			}
 		},
-		beforeCreate() {
-			api.userData().then(({data}) => {
-				console.log(data);
-				if(data.success)
-					this.$store.commit('login', data.data);
-			})
+		mounted() {
+			this.updateUserData();
+			EventBus.$on('contact-server-failed', this.updateUserData);
 		}
 	}
 </script>

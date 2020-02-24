@@ -60,7 +60,8 @@
 
 <script>
     import api from '../../axios';
-    import Pagination from '@/components/Pagination'
+    import { EventBus } from '../../EventBus';
+    import Pagination from '@/components/Pagination';
     export default {
         name: "PrintTask",
         components: {
@@ -99,6 +100,7 @@
                         this.total = Math.ceil(data.total / 10);
                     } else {
                         console.log(data.errorMessage);
+                        EventBus.$emit('contact-server-failed');
                     }
                 })
             },

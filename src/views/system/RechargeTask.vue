@@ -56,6 +56,7 @@
 
 <script>
     import Pagination from '@/components/Pagination';
+    import { EventBus } from '../../EventBus';
     import api from '../../axios';
     export default {
         name: "rechargeTask",
@@ -91,6 +92,7 @@
                         this.total = Math.ceil(data.total / 10);
                     } else {
                         console.log(data.errorMessage);
+                        EventBus.$emit('contact-server-failed');
                     }
                 })
             },

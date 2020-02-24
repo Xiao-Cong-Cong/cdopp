@@ -35,8 +35,9 @@
 </template>
 
 <script>
-    import api from '../../axios'
-    import Pagination from '@/components/Pagination'
+    import api from '../../axios';
+    import { EventBus } from '../../EventBus';
+    import Pagination from '@/components/Pagination';
     export default {
         name: "RechargeLog",
         components: {
@@ -61,6 +62,8 @@
                     if(data.success) {
                         this.total = Math.ceil(data.total / 10);
                         this.rechargeLogs = data.data;
+                    } else {
+                        EventBus.$emit('contact-server-failed');
                     }
                 })
             }

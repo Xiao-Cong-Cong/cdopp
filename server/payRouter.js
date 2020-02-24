@@ -79,7 +79,7 @@ GetLogsByUser = (req, res) => {
 }
 
 GetLogsByAdmin = (req, res) => {
-    if(req.session.user.level === 9) {
+    if(req.session.user && req.session.user.level === 9) {
         page = req.query.page ? req.query.page : 1;
         status = req.query.status;
         username = req.query.username;
@@ -104,7 +104,7 @@ GetLogsByAdmin = (req, res) => {
 }
 
 Confirm = (req, res) => {
-    if(req.session.user.level === 9) {
+    if(req.session.user && req.session.user.level === 9) {
         var pid = req.query.pid;
         Pay.update({pid: pid}, {status: 1}, (err, doc) => {
             if(err) console.log(err);
