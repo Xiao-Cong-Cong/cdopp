@@ -188,7 +188,6 @@ Info = (req, res) => {
 }
 
 Data = (req, res) => {
-    console.log(req.session.user);
     if(req.session.user) {
         res.json({
             success: true,

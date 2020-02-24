@@ -35,5 +35,23 @@ export default {
     },
     fileGetLogsByAdmin(data) {
         return service.get('/file/getLogsByAdmin', { params: data });
+    },
+    fileConfirmPDFById(data) {
+        return service.get('/file/confirmPDFById', { params: data });
+    },
+    payData() {
+        return service.get('/pay/data');
+    },
+    payRecharge(data) {
+        return service.post('/pay/recharge', data);
+    },
+    payGetLogsByUser(data) {
+        return service.get('/pay/getLogsByUser', { params: data })
+    },
+    payGetLogsByAdmin(data) {
+        return service.get('/pay/getLogsByAdmin', { params: data })
+    },
+    payConfirm(data) {
+        return service.get('/pay/confirm', { params: data })
     }
 }

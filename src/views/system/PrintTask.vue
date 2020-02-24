@@ -6,10 +6,10 @@
         </div>
         <div class="col-md-6">
             <div align="right" class="print-task-search">
-                <label class="print-task-search-username">User Name
+                <label>User Name
                     <input type="text" v-model="search.username">
                 </label>
-                <label class="print-task-search-status">Status
+                <label>Status
                     <div class="btn-group">
                         <label :class="{active: search.Submitted, 'btn btn-primary btn-xs': true}" btn-checkbox @click="search.Submitted = !search.Submitted">Submitted</label>
                         <label :class="{active: search.Permitted, 'btn btn-primary btn-xs': true}" btn-checkbox @click="search.Permitted = !search.Permitted">Permitted</label>

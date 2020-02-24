@@ -40,18 +40,23 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">&yen; {{user.balance}}</label>
                 <div class="col-sm-10">
-                    <button type="button" class="btn btn-danger" @click="recharge()">申请充值</button>
-                    <span class="text-primary">&nbsp;&nbsp;<strong>{{rechargeError}}</strong></span>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#recharge-modal">申请充值</button>
+                    <span class="text-primary">&nbsp;&nbsp;<strong>{{rechargeMessage}}</strong></span>
                 </div>
             </div>
         </form>
+        <Recharge></Recharge>
     </div>
 </template>
 
 <script>
-    import api from '../../axios'
+    import api from '../../axios';
+    import Recharge from './Recharge';
     export default {
         name: "Person",
+        components: {
+            Recharge
+        },
         data() {
             return {
                 user: {
@@ -63,7 +68,7 @@
                 },
                 errorMsg: '',
                 errorMsg_success: false,
-                rechargeError: '',
+                rechargeMessage: '',
                 passwordReg: /^[0-9a-zA-Z!@#()_,.]*$/
             }
         },
@@ -90,6 +95,9 @@
                         }
                     })
                 }
+            },
+            rechargeSuccess() {
+                this.rechargeMessage = "提交申请成功";
             }
         }
     }

@@ -35,6 +35,14 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    alipayAccount: {
+        type: String,
+        default: ''
+    },
+    realname: {
+        type: String,
+        default: ''
     }
 },{
     timestamps: true
@@ -87,11 +95,50 @@ const fileSchema = new Schema({
         required: true,
         default: Date.now
     }
+});
+
+let payID = 1;
+
+const paySchema = new Schema({
+    pid: {
+        type: Number,
+        required: true,
+        unique: true,
+        default: () => payID++
+    },
+    submit_time: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    username: {
+        type: String,
+        required: true
+    },
+    alipayAccount: {
+        type: String,
+        required: true
+    },
+    realname: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    // 0-pending, 1-recharged, 2-failed
+    status: {
+        type: Number,
+        required: true,
+        default: 0
+    }
 })
 
 var db = {
     User: mongoose.model('User', userSchema),
-    File: mongoose.model('File', fileSchema)
+    File: mongoose.model('File', fileSchema),
+    Pay: mongoose.model('Pay', paySchema)
 }
 
 module.exports = db

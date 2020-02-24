@@ -8,6 +8,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const userRouter = require('./server/userRouter');
 const fileRouter = require('./server/fileRouter');
+const payRouter = require('./server/payRouter');
 
 const app = express();
 app.use(logger('dev'));
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/user', userRouter);
 app.use('/api/file', fileRouter);
+app.use('/api/pay', payRouter);
 
 const upload = multer({
     dest: './uploads/',

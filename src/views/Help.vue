@@ -1,36 +1,22 @@
 <template>
 	<div class="container">
-		<p>help {{ page }} / {{ total }}</p>
-		<Pagination v-model="page" :total="total"></Pagination>
-		<table class="table table-hover">
-			<tr>
-				<td>1</td>
-				<td>2</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2</td>
-			</tr>
-		</table>
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#recharge-modal">
+			Launch demo modal
+		</button>
+		<Recharge></Recharge>
 	</div>
 </template>
 
 <script>
-	import Pagination from '../components/Pagination'
+	import Recharge from './user/Recharge'
 	export default {
 		name: 'Help',
 		data() {
 			return {
-				page: 1,
-				total: 200
 			}
 		},
 		components: {
-			Pagination
+			Recharge
 		}
 	}
 </script>

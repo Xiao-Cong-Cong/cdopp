@@ -56,23 +56,31 @@ SubmitPDF = (req, res) => {
     })
 }
 
-getLogsByUser = (req, res) => {
-    page = req.query.page ? req.query.page : 1;
-    username = req.session.user.username;
-    File.countDocuments({ username: username }, (err, total) => {
-        if(err) console.log(err);
-        File.find({ username: username }).skip(page*10-10).limit(10).exec((err, docs) => {
+GetLogsByUser = (req, res) => {
+    if(req.session.user) {
+        page = req.query.page ? req.query.page : 1;
+        username = req.session.user.username;
+        File.countDocuments({ username: username }, (err, total) => {
             if(err) console.log(err);
-            res.json({
-                success: true,
-                total: total,
-                data: docs
+            console.log(' --- hi ---')
+            File.find({ username: username }).skip(page*10-10).limit(10).exec((err, docs) => {
+                if(err) console.log(err);
+                res.json({
+                    success: true,
+                    total: total,
+                    data: docs
+                });
             });
+        });
+    } else {
+        res.json({
+            success: false,
+            errorMessage: "尚未登陆"
         })
-    })
+    }
 }
 
-getLogsByAdmin = (req, res) => {
+GetLogsByAdmin = (req, res) => {
     page = req.query.page ? req.query.page : 1;
     status = req.query.status;
     username = req.query.username;
@@ -98,9 +106,28 @@ getLogsByAdmin = (req, res) => {
     }
 }
 
+ConfirmPDFById = (req, res) => {
+    if(req.session.user.level === 9) {
+        var fid = req.query.fid;
+        File.update({fid: fid}, {status: 1}, (err, doc) => {
+            if(err) console.log(err);
+            res.json({
+                success: true
+            });
+        })
+    } else {
+        console.log("没有权限确认PDF");
+        res.json({
+            success: false,
+            errorMessage: "没有权限确认PDF"
+        });
+    }
+}
+
 fileRouter.post('/submitPDF', SubmitPDF);
 fileRouter.post('/modifyCopies', ModifyCopies);
-fileRouter.get('/getLogsByUser', getLogsByUser);
-fileRouter.get('/getLogsByAdmin', getLogsByAdmin);
+fileRouter.get('/getLogsByUser', GetLogsByUser);
+fileRouter.get('/getLogsByAdmin', GetLogsByAdmin);
+fileRouter.get('/confirmPDFById', ConfirmPDFById);
 
 module.exports = fileRouter

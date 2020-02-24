@@ -32,53 +32,7 @@
 			</div>
 			<div class="col-sm-10">
                 <UserInfo v-show="tab==='user'"></UserInfo>
-				<div v-show="tab==='recharge'">
-					<h3>充值控制面板</h3>
-					<div>
-						<!-- <pagination boundary-links="true" total-items="rechargeLogs.total_items" items-per-page="10" max-size="10" v-model="rechargeLogs_currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
-					</div>
-					<div align="right">
-						<label>User Name
-							<input type="text" v-model="rechargeLogs_userName">
-						</label>
-						<label>Status
-							<!-- <div class="btn-group">
-								<label class="btn btn-primary btn-xs" ng-model="rechargeLogs_statusArray.pending" btn-checkbox>Pending</label>
-								<label class="btn btn-primary btn-xs" ng-model="rechargeLogs_statusArray.recharged" btn-checkbox>Recharged</label>
-								<label class="btn btn-primary btn-xs" ng-model="rechargeLogs_statusArray.failed" btn-checkbox>Failed</label>
-							</div> -->
-						</label>
-					</div>
-					<table class="table table-hover table-bordered">
-						<tr>
-							<th>#</th>
-							<th>提交时间</th>
-							<th>用户</th>
-							<th>支付宝账户</th>
-							<th>真实姓名</th>
-							<th>金额</th>
-							<th>充值状态</th>
-							<th>操作</th>
-						</tr>
-						<tr ng-repeat="log in rechargeLogs.data">
-							<td>{{log.pid}}</td>
-							<td>{{log.submitTime}}</td>
-							<td>{{log.userName}}</td>
-							<td>{{log.payAccount}}</td>
-							<td>{{log.realName}}</td>
-							<td>{{log.amount}}</td>
-							<td>
-								<span :class="{'text-muted': log.rechargeStatus==='Pending', 'text-success': log.rechargeStatus==='Recharged', 'text-danger': log.rechargeStatus==='Failed'}">
-									<span :class="{'glyphicon glyphicon-time': log.rechargeStatus==='Pending', 'glyphicon glyphicon-ok': log.rechargeStatus==='Recharged', 'glyphicon glyphicon-remove': log.rechargeStatus==='Failed'}"></span>
-									<span>{{log.rechargeStatus}}</span>
-								</span>
-							</td>
-							<td>
-								<a v-show="log.rechargeStatus==='Pending'" href="javascript:" ng-click="confirmRechargePending($index)"><span class="glyphicon glyphicon-file"></span> confirm</a>
-							</td>
-						</tr>
-					</table>
-				</div>
+				<RechargeTask v-show="tab==='recharge'"></RechargeTask>
 				<div v-show="tab==='printer'">
 					<div class="pull-right">
 						<!-- <button class="btn btn-danger" ng-click="newPrinter()">新打印机</button> -->
@@ -145,13 +99,15 @@
 </template>
 
 <script>
-	import UserInfo from './UserInfo'
-	import PrintTask from './PrintTask'
+	import UserInfo from './UserInfo';
+	import PrintTask from './PrintTask';
+	import RechargeTask from './RechargeTask';
 	export default {
         name: 'System',
         components: {
 			UserInfo,
-			PrintTask
+			PrintTask,
+			RechargeTask
         },
 		data() {
 			return {

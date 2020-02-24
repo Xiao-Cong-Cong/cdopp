@@ -3,18 +3,18 @@
 		<div class="row">
 			<div class="col-sm-2">
 				<ul class="nav nav-pills nav-stacked">
-					<li class="navbar-text"><h4><strong>&nbsp;</strong></h4></li>
+					<li class="navbar-text"><h4><strong>DashBoard</strong></h4></li>
 				</ul>
 				<hr>
 				<h4><small><strong>个人</strong></small></h4>
 				<ul class="nav nav-pills nav-stacked">
-					<li :class="{active: tab==='user.printLog'}" @click="tab='user.printLog'">
+					<li :class="{active: tab==='printLog'}" @click="tab='printLog'">
 						<a href="javascript:"><span class="glyphicon glyphicon-th-list"></span> 打印记录</a>
 					</li>
-					<li :class="{active: tab==='user.basic'}" @click="tab='user.basic'">
+					<li :class="{active: tab==='basic'}" @click="tab='basic'">
 						<a href="javascript:"><span class="glyphicon glyphicon-user"></span> 个人信息</a>
 					</li>
-					<li :class="{active: tab==='user.rechargeLog'}" @click="tab='user.rechargeLog'">
+					<li :class="{active: tab==='rechargeLog'}" @click="tab='rechargeLog'">
 						<a href="javascript:"><span class="glyphicon glyphicon-yen"></span> 充值记录</a>
 					</li>
 				</ul>
@@ -32,37 +32,9 @@
 				</ul> -->
 			</div>
 			<div class="col-sm-10">
-				<Printlog v-show="tab==='user.printLog'"></Printlog>
-				<Person v-show="tab==='user.basic'"></Person>
-				<div v-show="tab==='user.rechargeLog'">
-					<h3>充值记录</h3>
-					<!-- <pagination boundary-links="true" total-items="rechargeLogs.total_items" items-per-page="10" max-size="10" ng-model="rechargeLogs_currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> -->
-					<table class="table table-hover table-bordered">
-						<tr>
-							<th>#</th>
-							<th>提交时间</th>
-							<th>用户</th>
-							<th>支付宝账户</th>
-							<th>真实姓名</th>
-							<th>金额</th>
-							<th>充值状态</th>
-						</tr>
-						<tr ng-repeat="log in rechargeLogs.data">
-							<td>{{log.pid}}</td>
-							<td>{{log.submitTime}}</td>
-							<td>{{log.userName}}</td>
-							<td>{{log.payAccount}}</td>
-							<td>{{log.realName}}</td>
-							<td>{{log.amount}}</td>
-							<td>
-								<span :class="{'text-muted': log.rechargeStatus==='Pending', 'text-success': log.rechargeStatus==='Recharged', 'text-danger': log.rechargeStatus==='Failed'}">
-									<span :class="{'glyphicon glyphicon-time': log.rechargeStatus==='Pending', 'glyphicon glyphicon-ok': log.rechargeStatus==='Recharged', 'glyphicon glyphicon-remove': log.rechargeStatus==='Failed'}"></span>
-									<span>{{log.rechargeStatus}}</span>
-								</span>
-							</td>
-						</tr>
-					</table>
-				</div>
+				<Printlog v-show="tab==='printLog'"></Printlog>
+				<Person v-show="tab==='basic'"></Person>
+				<RechargeLog v-show="tab==='rechargeLog'"></RechargeLog>
 				<!-- <div v-show="tab==='printer.new'">
 					<h3>打印机申请</h3><hr>
 					<p>请先完善个人信息，然后联系管理员进行相关认证</p>
@@ -77,36 +49,17 @@
 <script>
 	import Person from './Person'
 	import Printlog from './Printlog'
+	import RechargeLog from './RechargeLog'
 	export default {
 		name: 'User',
 		components: {
 			Person,
-			Printlog
+			Printlog,
+			RechargeLog
 		},
 		data() {
 			return {
-				tab: 'user.printLog',
-				rechargeError: '',
-				user: {
-					userName: '',
-					password: '',
-					old_password: '',
-					level: 0
-				},
-				log: {
-					submitTime: '',
-					userName: '',
-					payAccount: '',
-					realName: '',
-					amount: '',
-					fid: '',
-					pages: '',
-					copies: '',
-					price: '',
-					printerInfo: {
-						location: ''
-					}
-				}
+				tab: 'printLog'
 			}
 		}
 	}
