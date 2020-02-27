@@ -1,7 +1,6 @@
 <template>
 	<div class="container">
-		<!-- <p class="text-info" align="center"><strong> globalConfig.notice </strong></p> -->
-		<h1 align="center">Online Print Platform V0.3.0</h1>
+		<h1 align="center">Online Print Platform V0.2.0</h1>
 		<div class="row">
 			<div class="col-sm-3">
 				<h4><small><strong>类型</strong></small></h4>
