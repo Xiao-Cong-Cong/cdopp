@@ -13,7 +13,6 @@
                     <th>页数</th>
                     <th>份数</th>
                     <th>价格</th>
-                    <!-- <th>打印机</th> -->
                     <th>打印状态</th>
                 </tr>
             </thead>
@@ -25,7 +24,6 @@
                     <td>{{log.pages}}</td>
                     <td>{{log.copies}}</td>
                     <td>{{log.price}}</td>
-                    <!-- <td>{{log.printerInfo.location}}</td> -->
                     <td>
                         <span :class="{'text-muted': log.status===status.Submitted, 'text-primary': log.status===status.Permitted, 'text-info': log.status===status.Printing, 'text-success': log.status===status.Printed, 'text-danger': log.status===status.Failed}">
                             <span :class="{'glyphicon glyphicon-upload': log.status===status.Submitted, 'glyphicon glyphicon-check': log.status===status.Permitted, 'glyphicon glyphicon-file': log.status===status.Printing, 'glyphicon glyphicon-ok': log.status===status.Printed, 'glyphicon glyphicon-remove': log.status===status.Failed}"></span>

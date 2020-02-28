@@ -24,6 +24,9 @@ export default {
     userData() {
         return service.get('/user/data');
     },
+    userGetBalance() {
+        return service.get('/user/getBalance');
+    },
     fileModifyCopies(data) {
         return service.post('/file/modifyCopies', data);
     },
@@ -36,8 +39,11 @@ export default {
     fileGetLogsByAdmin(data) {
         return service.get('/file/getLogsByAdmin', { params: data });
     },
-    fileConfirmPDFById(data) {
-        return service.get('/file/confirmPDFById', { params: data });
+    fileConfirmById(data) {
+        return service.get('/file/confirmById', { params: data });
+    },
+    fileCancelById(data) {
+        return service.get('/file/cancelById', { params: data });
     },
     payData() {
         return service.get('/pay/data');
@@ -46,12 +52,15 @@ export default {
         return service.post('/pay/recharge', data);
     },
     payGetLogsByUser(data) {
-        return service.get('/pay/getLogsByUser', { params: data })
+        return service.get('/pay/getLogsByUser', { params: data });
     },
     payGetLogsByAdmin(data) {
-        return service.get('/pay/getLogsByAdmin', { params: data })
+        return service.get('/pay/getLogsByAdmin', { params: data });
     },
     payConfirm(data) {
-        return service.get('/pay/confirm', { params: data })
+        return service.get('/pay/confirm', { params: data });
+    },
+    payCancel(data) {
+        return service.get('/pay/cancel', { params: data });
     }
 }

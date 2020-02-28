@@ -46,22 +46,26 @@
                         </span>
                     </td>
                     <td>
-                        <a ng-show="log.rechargeStatus==='Pending'" href="javascript:" ng-click="confirmRechargePending($index)"><span class="glyphicon glyphicon-file"></span> confirm</a>
+                        <a v-show="log.status===status.Pending" href="javascript:" @click="confirmRechargePending(log)"><span class="glyphicon glyphicon-file"></span> confirm</a>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <ConfirmRecharge :log="log"></ConfirmRecharge>
     </div>
 </template>
 
 <script>
     import Pagination from '@/components/Pagination';
+    import ConfirmRecharge from './ConfirmRecharge';
     import { EventBus } from '../../EventBus';
     import api from '../../axios';
+    import $ from 'jquery';
     export default {
         name: "rechargeTask",
         components: {
-            Pagination
+            Pagination,
+            ConfirmRecharge
         },
         data() {
             return {
@@ -80,7 +84,8 @@
                     Recharged: 1,
                     Failed: 2
                 },
-                statusArray: ['Pending', 'Recharged', 'Failed']
+                statusArray: ['Pending', 'Recharged', 'Failed'],
+                log: {}
             }
         },
         methods: {
@@ -101,6 +106,10 @@
                 for(var i = 0; i <= 2; i++)
                     if(this.search[this.statusArray[i]])
                         this.search.status.push(i);
+            },
+            confirmRechargePending(log) {
+                this.log = log;
+                $('#confirm-recharge-modal').modal('show');
             }
         },
         mounted() {

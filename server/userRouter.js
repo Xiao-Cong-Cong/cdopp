@@ -87,13 +87,11 @@ Login = (req, res) => {
                 req.session.user = {
                     login: 1,
                     level: doc.level,
-                    balance: doc.balance,
                     username: doc.username
                 }
                 res.json({
                     success: true,
                     level: doc.level,
-                    balance: doc.balance,
                     username: doc.username
                 })
             } else {
@@ -201,11 +199,29 @@ Data = (req, res) => {
     }
 }
 
+GetBalance = (req, res) => {
+    if(req.session.user) {
+        var username = req.session.user.username;
+        User.findOne({ username: username }, (err, doc) => {
+            if(err) console.log(err);
+            res.json({
+                success: true,
+                balance: doc.balance
+            })
+        })
+    } else {
+        res.json({
+            success: false
+        })
+    }
+}
+
 userRouter.post("/register", Register);
 userRouter.post("/login", Login);
 userRouter.get("/logout", Logout);
 userRouter.post("/modify", Modify);
 userRouter.get("/info", Info);
 userRouter.get("/data", Data);
+userRouter.get("/getBalance", GetBalance);
 
 module.exports = userRouter

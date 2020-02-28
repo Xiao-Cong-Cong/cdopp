@@ -24,7 +24,7 @@
 					</form>
 					<ul class="nav navbar-nav" v-if="user.login === 1">
 						<li><router-link to="/user">欢迎, {{ user.username }}</router-link></li>    
-						<li><a href="#" @click="logout">登出</a></li>
+						<li><a href="javascript:" @click="logout">登出</a></li>
 					</ul>
 				</div>
 			</div>

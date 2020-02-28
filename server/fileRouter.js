@@ -62,7 +62,6 @@ GetLogsByUser = (req, res) => {
         username = req.session.user.username;
         File.countDocuments({ username: username }, (err, total) => {
             if(err) console.log(err);
-            console.log(' --- hi ---')
             File.find({ username: username }).skip(page*10-10).limit(10).exec((err, docs) => {
                 if(err) console.log(err);
                 res.json({
@@ -106,7 +105,7 @@ GetLogsByAdmin = (req, res) => {
     }
 }
 
-ConfirmPDFById = (req, res) => {
+ConfirmById = (req, res) => {
     if(req.session.user && req.session.user.level === 9) {
         var fid = req.query.fid;
         File.update({fid: fid}, {status: 1}, (err, doc) => {
@@ -116,11 +115,29 @@ ConfirmPDFById = (req, res) => {
             });
         })
     } else {
-        console.log("没有权限确认PDF");
+        console.log("没有权限确认打印请求");
         res.json({
             success: false,
-            errorMessage: "没有权限确认PDF"
+            errorMessage: "没有权限确认打印请求"
         });
+    }
+}
+
+CancelById = (req, res) => {
+    if(req.session.user && req.session.user.level === 9) {
+        var fid = req.query.fid;
+        File.update({fid: fid}, {status: 4}, (err, doc) => {
+            if(err) console.log(err);
+            res.json({
+                success: true
+            })
+        })
+    } else {
+        console.log("没有权限取消打印请求");
+        res.json({
+            success: false,
+            errorMessage: "没有权限取消打印请求"
+        })
     }
 }
 
@@ -128,6 +145,7 @@ fileRouter.post('/submitPDF', SubmitPDF);
 fileRouter.post('/modifyCopies', ModifyCopies);
 fileRouter.get('/getLogsByUser', GetLogsByUser);
 fileRouter.get('/getLogsByAdmin', GetLogsByAdmin);
-fileRouter.get('/confirmPDFById', ConfirmPDFById);
+fileRouter.get('/confirmById', ConfirmById);
+fileRouter.get('/cancelById', CancelById);
 
 module.exports = fileRouter

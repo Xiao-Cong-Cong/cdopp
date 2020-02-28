@@ -29,7 +29,6 @@
                     <th>页数</th>
                     <th>份数</th>
                     <th>价格</th>
-                    <!-- <th>打印机</th> -->
                     <th>打印状态</th>
                     <th>操作</th>
                 </tr>
@@ -42,7 +41,6 @@
                     <td>{{log.pages}}</td>
                     <td>{{log.copies}}</td>
                     <td>{{log.price}}</td>
-                    <!-- <td>{{log.printerInfo.location}}</td> -->
                     <td>
                         <span :class="{'text-muted': log.status===status.Submitted, 'text-primary': log.status===status.Permitted, 'text-info': log.status===status.Printing, 'text-success': log.status===status.Printed, 'text-danger': log.status===status.Failed}">
                             <span :class="{'glyphicon glyphicon-upload': log.status===status.Submitted, 'glyphicon glyphicon-check': log.status===status.Permitted, 'glyphicon glyphicon-file': log.status===status.Printing, 'glyphicon glyphicon-ok': log.status===status.Printed, 'glyphicon glyphicon-remove': log.status===status.Failed}"></span>
@@ -50,22 +48,25 @@
                         </span>
                     </td>
                     <td>
-                        <a href="javascript:" ng-click="confirmPrintSubmitted($index)"><span class="glyphicon glyphicon-file"></span><span>operation</span></a>
+                        <a href="javascript:" @click="confirmPrintSubmitted(log)"><span class="glyphicon glyphicon-file"></span><span>operation</span></a>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <ConfirmPrint :log="log"></ConfirmPrint>
     </div>
 </template>
 
 <script>
     import api from '../../axios';
     import { EventBus } from '../../EventBus';
+    import ConfirmPrint from './ConfirmPrint';
     import Pagination from '@/components/Pagination';
     export default {
         name: "PrintTask",
         components: {
-            Pagination
+            Pagination,
+            ConfirmPrint
         },
         data() {
             return {
@@ -89,6 +90,7 @@
                     Failed: 4
                 },
                 statusArray: ['Submitted', 'Permitted', 'Printing', 'Printed', 'Failed'],
+                log: {}
             }
         },
         methods: {
@@ -109,6 +111,10 @@
                 for(var i = 0; i <= 4; i++)
                     if(this.search[this.statusArray[i]])
                         this.search.status.push(i);
+            },
+            confirmPrintSubmitted(log) {
+                this.log = log;
+                $('#confirm-print-modal').modal('show');
             }
         },
         mounted() {

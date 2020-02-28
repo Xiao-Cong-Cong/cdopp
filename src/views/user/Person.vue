@@ -38,7 +38,7 @@
         <hr>
         <form class="form-horizontal" onsubmit="return false;">
             <div class="form-group">
-                <label class="col-sm-2 control-label">&yen; {{user.balance}}</label>
+                <label class="col-sm-2 control-label">&yen; {{balance}}</label>
                 <div class="col-sm-10">
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#recharge-modal">申请充值</button>
                     <span class="text-primary">&nbsp;&nbsp;<strong>{{rechargeMessage}}</strong></span>
@@ -52,6 +52,7 @@
 <script>
     import api from '../../axios';
     import Recharge from './Recharge';
+    import { EventBus } from '../../EventBus';
     export default {
         name: "Person",
         components: {
@@ -63,9 +64,9 @@
 					username: this.$store.state.user.username,
                     password: '',
                     password2: '',
-					password_old: '',
-                    balance: this.$store.state.user.balance,
+					password_old: ''
                 },
+                balance: 0,
                 errorMsg: '',
                 errorMsg_success: false,
                 rechargeMessage: '',
@@ -99,6 +100,15 @@
             rechargeSuccess() {
                 this.rechargeMessage = "提交申请成功";
             }
+        },
+        mounted() {
+            api.userGetBalance().then(({data}) => {
+                if(data.success) {
+                    this.balance = data.balance;
+                } else {
+                    EventBus.$emit('contact-server-failed');
+                }
+            })
         }
     }
 </script>

@@ -39,7 +39,7 @@ Recharge = (req, res) => {
         newPay.save(err => {
             if(err) console.log(err);
             console.log("充值申请提交成功");
-            User.update({username: username}, {realname: realname, alipayAccount: alipayAccount}, (err, doc) => {
+            User.updateOne({username: username}, {realname: realname, alipayAccount: alipayAccount}, (err, doc) => {
                 if(err) console.log(err);
                 console.log("更新个人支付信息成功");
                 res.json({
@@ -106,12 +106,20 @@ GetLogsByAdmin = (req, res) => {
 Confirm = (req, res) => {
     if(req.session.user && req.session.user.level === 9) {
         var pid = req.query.pid;
-        Pay.update({pid: pid}, {status: 1}, (err, doc) => {
-            if(err) console.log(err);
-            res.json({
-                success: true
+        Pay.findOne({pid, pid}, (err, doc) => {
+            var username = doc.username;
+            var amount = doc.amount;
+            console.log(username, amount);
+            User.updateOne({ username: username }, { $inc: { balance: amount }}, (err, doc) => {
+                if(err) console.log(err);
+                Pay.updateOne({pid: pid}, {status: 1}, (err, doc) => {
+                    if(err) console.log(err);
+                    res.json({
+                        success: true
+                    });
+                });
             });
-        })
+        });
     } else {
         console.log("没有权限确认充值");
         res.json({
@@ -121,10 +129,29 @@ Confirm = (req, res) => {
     }
 }
 
+Cancel = (req, res) => {
+    if(req.session.user && req.session.user.level === 9) {
+        var pid = req.query.pid;
+        Pay.updateOne({pid: pid}, {status: 2}, (err, doc) => {
+            if(err) console.log(err);
+            res.json({
+                success: true
+            });
+        });
+    } else {
+        console.log("没有权限取消充值");
+        res.json({
+            success: false,
+            errorMessage: "没有权限取消充值"
+        });
+    }
+}
+
 payRouter.get('/data', Data);
 payRouter.post('/recharge', Recharge);
 payRouter.get('/getLogsByUser', GetLogsByUser);
 payRouter.get('/getLogsByAdmin', GetLogsByAdmin);
 payRouter.get('/confirm', Confirm);
+payRouter.get('/cancel', Cancel);
 
 module.exports = payRouter
